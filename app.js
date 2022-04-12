@@ -179,7 +179,7 @@ app.get(
  */
 
 app.get("/api/affirmations", affirmationController.getAffirmations);
-app.get("/api/affirmations/:id", affirmationController.getAffirmation);
+app.get("/api/affirmations/:id", affirmationController.getAffirmationById);
 // app.get(
 //   "/api/affirmations/populate",
 //   affirmationController.populateAffirmations
