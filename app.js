@@ -27,7 +27,6 @@ dotenv.config({ path: ".env" });
 const homeController = require("./controllers/home");
 const userController = require("./controllers/user");
 const affirmationController = require("./controllers/api/affirmation");
-const contactController = require("./controllers/contact");
 
 /**
  * API keys and Passport configuration.
@@ -54,8 +53,6 @@ mongoose.connection.on("error", (err) => {
 /**
  * Express configuration.
  */
-app.set("host", process.env.OPENSHIFT_NODEJS_IP || "0.0.0.0");
-app.set("port", process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 app.use(compression());
@@ -81,12 +78,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
-  if (req.path === "/api/upload") {
-    // Multer multipart/form-data handling needs to occur before the Lusca CSRF check.
-    next();
-  } else {
-    lusca.csrf()(req, res, next);
-  }
+  lusca.csrf()(req, res, next);
 });
 app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
@@ -155,8 +147,7 @@ app.use(
 app.get("/", homeController.index);
 app.get("/login", userController.getLogin);
 app.get("/logout", userController.logout);
-app.get("/contact", contactController.getContact);
-app.post("/contact", contactController.postContact);
+
 app.get("/account", passportConfig.isAuthenticated, userController.getAccount);
 app.post(
   "/account/profile",
